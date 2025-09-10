@@ -1,0 +1,58 @@
+import React, { useState } from 'react';
+import WeatherCard from './WeatherCard';
+
+const API_KEY = 'YOUR_OPENWEATHERMAP_API_KEY';
+
+function App() {
+  const [city, setCity] = useState('');
+  const [weather, setWeather] = useState(null);
+  const [error, setError] = useState('');
+
+  const fetchWeather = async () => {
+    if (!city) return;
+    setError('');
+    setWeather(null);
+
+    try {
+      const response = await fetch(
+        `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`
+      );
+      const data = await response.json();
+
+      if (response.ok) {
+        setWeather(data);
+      } else {
+        setError(data.message);
+      }
+    } catch (err) {
+      setError('Failed to fetch weather');
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    fetchWeather();
+  };
+
+  return (
+    <div style={{ maxWidth: 400, margin: '20px auto', fontFamily: 'Arial, sans-serif' }}>
+      <h2>Weather Dashboard</h2>
+      <form onSubmit={handleSubmit} style={{ marginBottom: 20 }}>
+        <input
+          type="text"
+          placeholder="Enter city"
+          value={city}
+          onChange={(e) => setCity(e.target.value)}
+          style={{ padding: 8, width: '70%', marginRight: 8 }}
+        />
+        <button type="submit" style={{ padding: 8 }}>Search</button>
+      </form>
+
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+
+      {weather && <WeatherCard weather={weather} />}
+    </div>
+  );
+}
+
+export default App;
