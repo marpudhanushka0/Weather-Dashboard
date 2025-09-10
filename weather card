@@ -1,0 +1,21 @@
+import React from 'react';
+
+function WeatherCard({ weather }) {
+  const { name, main, weather: weatherDetails } = weather;
+  const iconUrl = `https://openweathermap.org/img/wn/${weatherDetails[0].icon}@2x.png`;
+
+  return (
+    <div style={{ border: '1px solid #ddd', borderRadius: 8, padding: 20 }}>
+      <h3>{name}</h3>
+      <img src={iconUrl} alt={weatherDetails[0].description} />
+      <p style={{ fontSize: 24, margin: '10px 0' }}>
+        {Math.round(main.temp)}°C
+      </p>
+      <p>{weatherDetails[0].description}</p>
+      <p>Humidity: {main.humidity}%</p>
+      <p>Pressure: {main.pressure} hPa</p>
+    </div>
+  );
+}
+
+export default WeatherCard;
